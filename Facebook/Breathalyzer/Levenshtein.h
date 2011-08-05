@@ -49,6 +49,12 @@ public:
   static const uint32_t INVALID_DISTANCE;
 
 	static uint32_t distance(const std::string &source, const std::string &target);
+
+protected:
+	static uint32_t NUM_ROWS, NUM_COLS;
+	static matrix_t DISTANCE_MATRIX;
+
+	static void resize(matrix_t &matrix, uint32_t rows, uint32_t columns);
 }; /// class Levenshtein
 
 } /// namespace Facebook

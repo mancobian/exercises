@@ -1,6 +1,8 @@
 #include "Dictionary.h"
 #include <cassert>
 #include <climits>
+#include <cstring>
+#include <algorithm>
 
 using namespace Exercises::Facebook;
 
@@ -45,31 +47,26 @@ uint32_t Dictionary::Utility::read(const std::string &filename, std::string *dat
   /// Write file into memory
   data->assign(buffer, fileSize);
   delete[] buffer;
+
+  /// Uppercase everything!
+  std::transform(data->begin(), data->end(), data->begin(), ::toupper);
   return data->size();
 }
 
 uint32_t Dictionary::Utility::split(const std::string &text, Dictionary::string_v *results, const std::string &delimiters)
 {
   /// Tokenize the input string
-  int index;
-  std::string copy(text);
-  while ((index = copy.find_first_of(delimiters)) != std::string::npos)
-  {
-    if (index > 0)
-    {
-      /// Find the next token
-      /// @note Dispose of tokens that are also delimiters...
-      std::string token = copy.substr(0, index);
-      if ((token.size() > 1) || (delimiters.find(token) != std::string::npos))
-      {
-        results->push_back(token);
-      }
-    }
-    copy = copy.substr(index + 1);
-  }
+  const uint32_t BUFFER_SIZE = text.size() + 1;
+  char copy[BUFFER_SIZE];
+  memset(copy, '\0', BUFFER_SIZE);
+  memcpy(copy, text.c_str(), text.size());
 
-  /// Check for off-by-one case...
-  if (copy.length() > 0) { results->push_back(copy); }
+  char *token = NULL;
+  token = ::strtok(copy, delimiters.c_str());
+  while (token != NULL)
+  {
+    results->push_back(token);
+    token = ::strtok(NULL, delimiters.c_str());
+  }
   return results->size();
 }
-
