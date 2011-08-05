@@ -102,7 +102,7 @@ uint32_t BkTree::find(const std::string &center, match_m *results, uint32_t tole
   node_q nodes;
   nodes.push(this->mRoot);
 
-  // std::cout << "Finding nearest matches for: " << center << std::endl;
+  // std::cout << std::endl << "Finding nearest matches for: " << center << std::endl;
   while (!nodes.empty())
   {
     Node *node = nodes.front();

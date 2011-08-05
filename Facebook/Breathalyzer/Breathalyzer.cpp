@@ -3,14 +3,17 @@
 
 using namespace Exercises::Facebook;
 
-uint32_t Breathalyzer::go(const std::string &sentence, const std::string &dictionaryFilename, BkTree::match_m *results)
+Breathalyzer::Breathalyzer(const std::string &dictionaryFilename) :
+  mDictionary(dictionaryFilename),
+  mBkTree(new BkTree(mDictionary))
+{
+
+}
+
+uint32_t Breathalyzer::run(const std::string &sentence, BkTree::match_m *results)
 {
   /// Error checking
   if (!results) { return 0; }
-
-  /// Create B-K Tree from dictionary of words
-  Dictionary dictionary(dictionaryFilename);
-  BkTree bkTree(dictionary);
 
   /// Tokenize input string
   uint32_t sum = 0;
@@ -19,17 +22,16 @@ uint32_t Breathalyzer::go(const std::string &sentence, const std::string &dictio
   assert (Dictionary::Utility::split(sentence, &tokens, delimiters) > 0);
 
   /// Sum over nearest match(es) for all input tokens
-#pragma omp parallel for
+// #pragma omp parallel for
   for (uint32_t i = 0; i < tokens.size(); ++i)
   {
     BkTree::match_m tokenMatches;
     BkTree::match_p tokenCandidate;
-    bkTree.find(tokens[i], &tokenMatches);
+    this->mBkTree->find(tokens[i], &tokenMatches);
 
     BkTree::match_m::const_iterator
       iter = tokenMatches.begin(),
       end = tokenMatches.end();
-
     if (BkTree::getClosest(tokenMatches, &tokenCandidate))
     {
       results->insert(tokenCandidate);

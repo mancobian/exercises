@@ -8,7 +8,6 @@ const uint32_t Levenshtein::INVALID_DISTANCE = std::numeric_limits<unsigned char
 
 uint32_t Levenshtein::distance(const std::string &source, const std::string &target)
 {
-
   /// Get string lengths and test for early-out conditions
 	const uint32_t sourceLength = source.size();
 	const uint32_t targetLength = target.size();

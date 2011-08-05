@@ -1,0 +1,6 @@
+*.log
+*.d
+*.o
+.settings/*
+Debug
+Release
